@@ -45,9 +45,9 @@ while True:
     browser.get(url)
     time.sleep(5)
     for y in stops:
-        print("_________________________\nСпирка: "+f"{y}")
+        print("______________________________\nСпирка: "+f"{y}")
         browser.find_element("xpath", "/html/body/div/main/div[1]/section/div/div[1]/div/div/div/div[3]/div/div[2]/label/input").click()
-        browser.find_element("xpath", "/html/body/div/main/div[1]/section/div/div[1]/div/div/div/div[3]/div/div[2]/label/input").send_keys(f"{y}")
+        browser.find_element("xpath", "/html/body/div/main/div[1]/section/div/div[1]/div/div/div/div[3]/div/div[2]/label/input").send_keys("\("f"{y}""\)")
         browser.find_element("xpath", "/html/body/div[1]/main/div[1]/section/div/div[1]/div/div/div[1]/div[3]/div/div[2]/ul").click()
         time.sleep(1)
         html = browser.page_source
@@ -56,7 +56,22 @@ while True:
         
         
         for i,div in enumerate(soup.find_all('div', {'class': 'grid grid-cols-2 st:grid-cols-6 gap-4 cursor-pointer py-2 items-center border-b'},limit = 16), start=total_i):
-            line = str(div.find_next('span', {'class': 'rounded-md w-14 h-7 text-white font-extrabold text-center flex flex-col justify-center'}).text)
+            #print(div)
+            if "/bus.png" in str(div):
+                type = "A"
+                line = type+str(div.find_next('span', {'class': 'rounded-md w-14 h-7 text-white font-extrabold text-center flex flex-col justify-center'}).text)
+            elif "/subway.png" in str(div):
+                type = "M"
+                line = type+str(div.find_next('span', {'class': 'h-7 w-7 flex items-center justify-center font-bold rounded text-base rounded-full text-white'}).text)
+            elif "/tram.png" in str(div):
+                type = "T"
+                line = type+str(div.find_next('span', {'class': 'rounded-md w-14 h-7 text-white font-extrabold text-center flex flex-col justify-center'}).text)
+            elif "/trolley.png" in str(div):
+                type = "TB"
+                line = type+str(div.find_next('span', {'class': 'rounded-md w-14 h-7 text-white font-extrabold text-center flex flex-col justify-center'}).text)
+            elif "/night_bus.png" in str(div):
+                type = ""
+                line = type+str(div.find_next('span', {'class': 'rounded-md w-14 h-7 text-white font-extrabold text-center flex flex-col justify-center'}).text)
             globals()[f"topic{i}"] = f"homeassistant/sensor/sofiatraffic/{y}_"+line
             #print(f"Topic {i}: {globals()[f'topic{i}']}")
             if str(div).count("dash") < 3:
