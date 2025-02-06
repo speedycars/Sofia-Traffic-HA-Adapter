@@ -34,11 +34,11 @@ options.add_argument('--disable-dev-shm-usage')
 url = "https://www.sofiatraffic.bg/bg/public-transport"
 client_id = f'mqttsofiatraffic'
 total_i = 0
+dictt = {'А':'a', 'Б':'b', 'В':'v', 'Г':'g', 'Д':'d', 'Е':'e', 'Ж':'zh', 'З':'z', 'И':'i', 'Й':'y', 'К':'k', 'Л':'l', 'М':'m', 'Н':'n', 'О':'o', 'П':'p', 'Р':'r', 'С':'s', 'Т':'t', 'У':'u', 'Ф':'f', 'Х':'h', 'Ц':'ts', 'Ч':'ch', 'Ш':'sh', 'Щ':'sht', 'Ъ':'a', 'Ь':'y', 'Ю':'yu', 'Я':'ya'}
+table  = str.maketrans(dictt)
 
 while True:
     print('Starting new cycle! '+str(datetime.datetime.now())[0:-7]+'\n')
-    lines = []
-    lines_arrival_times = []
     browser = webdriver.Chrome(service=service, options=options)
     browser.set_window_size(1280, 720) 
     browser.delete_all_cookies()
@@ -72,8 +72,11 @@ while True:
             elif "/night_bus.png" in str(div):
                 type = ""
                 line = type+str(div.find_next('span', {'class': 'rounded-md w-14 h-7 text-white font-extrabold text-center flex flex-col justify-center'}).text)
-            globals()[f"topic{i}"] = f"homeassistant/sensor/sofiatraffic/{y}_"+line
-            #print(f"Topic {i}: {globals()[f'topic{i}']}")
+            
+            direction = str(div.find_next('h1', {'class': 'col-span-1 lg:col-span-3 2xl:col-span-4 font-bold text-xs lg:text-sm text-st-blue-dark'}).text.replace("   ","-").replace("(","").replace(")",""))
+            direction_trans = direction.translate(table).replace(" ","_")
+            globals()[f"topic{i}"] = f"homeassistant/sensor/sofiatraffic/{y}_"+line+"_"+direction_trans
+            print(f"Topic {i}: {globals()[f'topic{i}']}")
             if str(div).count("dash") < 3:
                 if (("text-2xl") in str(div)):
                     line_arrival_times = str(div.find_next('span', {'class': 'text-2xl'}).text)
@@ -81,11 +84,19 @@ while True:
                         line_arrival_times = line_arrival_times+", "+str(div.find_next('span', {'class': 'text-sm'}).text)
                         if str(div).count("text-sm") == 4:
                             line_arrival_times = line_arrival_times+", "+str(div.find_next('span', {'class': 'text-sm'}).find_next('span', {'class': 'text-sm'}).text)
+            else:
+                line_arrival_times = ""
             globals()[f"msg{i}"] = line_arrival_times
             #print(f"Message {i}: {globals()[f'msg{i}']}")
             print("Линия: "+line)
-            print("Пристига след: "+line_arrival_times+' мин.'+'\n')
+            print("Направление: "+direction)
+            if line_arrival_times!="":
+                print("Пристига след: "+line_arrival_times+' мин.'+'\n')
+            else:
+                print("Пристига след: Няма"+'\n')
             line = ""
+            type = ""
+            direction = ""
             line_arrival_times = ""
             total_i += 1
         browser.delete_all_cookies()
