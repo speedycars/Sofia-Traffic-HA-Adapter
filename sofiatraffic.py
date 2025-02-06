@@ -76,7 +76,7 @@ while True:
             direction = str(div.find_next('h1', {'class': 'col-span-1 lg:col-span-3 2xl:col-span-4 font-bold text-xs lg:text-sm text-st-blue-dark'}).text.replace("   ","-").replace("(","").replace(")",""))
             direction_trans = direction.translate(table).replace(" ","_")
             globals()[f"topic{i}"] = f"homeassistant/sensor/sofiatraffic/{y}_"+line+"_"+direction_trans
-            print(f"Topic {i}: {globals()[f'topic{i}']}")
+            #print(f"Topic {i}: {globals()[f'topic{i}']}")
             if str(div).count("dash") < 3:
                 if (("text-2xl") in str(div)):
                     line_arrival_times = str(div.find_next('span', {'class': 'text-2xl'}).text)
