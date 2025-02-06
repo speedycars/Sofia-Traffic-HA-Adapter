@@ -1,0 +1,6 @@
+services:
+  sofiatraffic:
+    image: "speedycars/sofiatraffic:latest"
+    build:
+      context: .
+      dockerfile: ./Dockerfile

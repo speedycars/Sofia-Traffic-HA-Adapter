@@ -1,0 +1,1 @@
+start "Sofia Traffic MQTT Agent" /min "PATH\sofiatraffic.cmd"
