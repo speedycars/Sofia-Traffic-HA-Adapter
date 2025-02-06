@@ -62,7 +62,10 @@ while True:
                 line = type+str(div.find_next('span', {'class': 'rounded-md w-14 h-7 text-white font-extrabold text-center flex flex-col justify-center'}).text)
             elif "/subway.png" in str(div):
                 type = "M"
-                line = type+str(div.find_next('span', {'class': 'h-7 w-7 flex items-center justify-center font-bold rounded text-base rounded-full text-white'}).text)
+                if "h-7 w-7 flex items-center justify-center font-bold rounded text-base rounded-full text-black" in str(div):
+                    line = type+str(div.find_next('span', {'class': 'h-7 w-7 flex items-center justify-center font-bold rounded text-base rounded-full text-black'}).text)
+                else:
+                    line = type+str(div.find_next('span', {'class': 'h-7 w-7 flex items-center justify-center font-bold rounded text-base rounded-full text-white'}).text)
             elif "/tram.png" in str(div):
                 type = "T"
                 line = type+str(div.find_next('span', {'class': 'rounded-md w-14 h-7 text-white font-extrabold text-center flex flex-col justify-center'}).text)
