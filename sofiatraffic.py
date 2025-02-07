@@ -26,6 +26,10 @@ options.add_argument('--headless')
 options.add_argument('--disable-search-engine-choice-screen')
 options.add_argument('--disable-gpu')
 options.add_argument("--disable-cache")
+options.add_argument("--disable-crash-reporter");
+options.add_argument("--disable-crashpad-for-testing");
+options.add_argument("--disable-oopr-debug-crash-dump");
+options.add_argument("--no-crash-upload");
 options.add_argument('--no-sandbox')
 options.add_argument('--ignore-certificate-errors')
 options.add_argument('--incognito')
