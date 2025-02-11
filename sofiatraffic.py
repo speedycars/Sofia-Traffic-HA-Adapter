@@ -62,7 +62,10 @@ while True:
         soup = BeautifulSoup(html.encode('utf-8'), 'html.parser')
         #print(soup)
         
-        
+        line = ""
+        type = ""
+        direction = ""
+        line_arrival_times = "Няма"
         for i,div in enumerate(soup.find_all('div', {'class': 'grid grid-cols-2 st:grid-cols-6 gap-4 cursor-pointer py-2 items-center border-b'},limit = 16), start=total_i):
             #print(div)
             if "/bus.png" in str(div):
@@ -96,19 +99,15 @@ while True:
                         if str(div).count("text-sm") == 4:
                             line_arrival_times = line_arrival_times+", "+str(div.find_next('span', {'class': 'text-sm'}).find_next('span', {'class': 'text-sm'}).text)
             else:
-                line_arrival_times = ""
+                line_arrival_times = "Няма"
             globals()[f"msg{i}"] = line_arrival_times
             #print(f"Message {i}: {globals()[f'msg{i}']}")
             print("Линия: "+line)
             print("Направление: "+direction)
-            if line_arrival_times!="":
+            if line_arrival_times!="Няма":
                 print("Пристига след: "+line_arrival_times+' мин.'+'\n')
             else:
                 print("Пристига след: Няма"+'\n')
-            line = ""
-            type = ""
-            direction = ""
-            line_arrival_times = ""
             total_i += 1
         browser.delete_all_cookies()
         browser.refresh()
