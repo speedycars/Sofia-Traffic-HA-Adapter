@@ -18,6 +18,7 @@ port = int(config.get('CONFIG', 'port'))
 username = str(config.get('CONFIG', 'username'))
 password = str(config.get('CONFIG', 'password'))
 stops = ast.literal_eval(config.get('CONFIG', 'stops'))
+selenium_server = ast.literal_eval(config.get('CONFIG', 'selenium_server'))
 freq = int(config.get('CONFIG', 'freq'))
 
 service = Service()
@@ -27,8 +28,6 @@ options.add_argument('--disable-search-engine-choice-screen')
 options.add_argument('--disable-gpu')
 options.add_argument("--disable-cache")
 options.add_argument("--disable-crash-reporter");
-options.add_argument("--disable-crashpad-for-testing");
-options.add_argument("--disable-oopr-debug-crash-dump");
 options.add_argument("--no-crash-upload");
 options.add_argument('--no-sandbox')
 options.add_argument('--ignore-certificate-errors')
@@ -43,8 +42,13 @@ table  = str.maketrans(dictt)
 
 while True:
     print('Starting new cycle! '+str(datetime.datetime.now())[0:-7]+'\n')
-    browser = webdriver.Chrome(service=service, options=options)
-    browser.set_window_size(1280, 720) 
+    if selenium_server == "":
+        browser = webdriver.Chrome(service=service, options=options)
+        print("No external Selenium server is used.")
+    else:
+        browser = webdriver.Remote(command_executor=selenium_server, options=options)
+        print("Selenium server: "+selenium_server)
+    browser.set_window_size(1280, 720)
     browser.delete_all_cookies()
     browser.get(url)
     time.sleep(5)
