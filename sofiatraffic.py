@@ -132,6 +132,8 @@ while True:
     def publish(client):
         for z in range(total_i):
             client.publish(globals()[f'topic{z}'], globals()[f'msg{z}'])
+            #print("Изпращане по MQTT: "+globals()[f'topic{z}']+": "+globals()[f'msg{z}'])
+            time.sleep(0.05)
         
 
     def on_disconnect(client, userdata, rc):
